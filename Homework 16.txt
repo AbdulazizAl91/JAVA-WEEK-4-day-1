@@ -1,0 +1,55 @@
+create database store;
+use store;
+create table countries(
+    code int primary key ,
+    name varchar(20) unicode,
+    continent_name varchar(20) not null
+);
+create table users(
+    id int primary key ,
+    full_name varchar(20),
+    email varchar(20) unicode,
+    gander char(1) check (gander in ('m', 'f')),
+    date_of_birth varchar(15),
+    created_at datetime default current_date,
+    country_code int,
+    foreign key (country_code)references countries(code)
+
+);
+create table orders(
+    id int primary key,
+    user_id int,
+    status varchar(6) check ( status in('start', 'finish')),
+    created_at datetime default current_date    ,
+    foreign key (user_id) references users(id)
+
+
+);
+create table product(
+    id  int primary key,
+    name varchar(20) not null ,
+    price int default 0,
+    status varchar(10) check (status in ('valid' , 'expired')),
+    created_at datetime default current_date
+);
+create table order_product(
+    order_id int ,
+    product_id int,
+    quantity int default 0,
+    primary key (order_id,product_id),
+    foreign key (order_id)references orders(id),
+    foreign key (product_id)references product(id)
+);
+insert into countries values (1,'Saudi Arabia','Asia');
+insert into users values (2,'aziz','aziz@gmail.com','m','24/4/1991',current_time,1 );
+insert into orders values (10,2,'start',current_time );
+insert into product values (11,'book',50,'valid',current_time);
+insert into order_product values (10,11,1);
+update countries
+set  name ='United Kingdom',continent_name ='Europe'
+where code = 1;
+delete from order_product
+where product_id =11;
+
+delete from product
+where id =11
